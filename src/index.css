@@ -1,0 +1,283 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: 16px;
+  background-color: rgba(163, 205, 236, 0.3);
+  padding-top: 67px;
+}
+
+.loading {
+  text-align: center;
+}
+
+/* NavBar */
+.navbar-background {
+  background-color: #fff;
+  border-bottom: solid 1.5px #BCC1CF;
+}
+
+@media (min-width: 1200px) {
+    .container-navbar {
+      padding-left: 75px;
+      padding-right: 75px;
+  }
+}
+
+
+.beer-logo{
+  height: 30px;
+  fill: #2196F3;
+}
+
+.beer-logo:hover{
+  fill: #2196F3;
+} 
+
+.navbar-title {
+  color: #000;
+}
+
+.navbar-title:hover {
+  color: #2196F3;
+}
+
+/* Filters */
+
+#overlay {
+  position: fixed; 
+  display: block; 
+  width: 100%; 
+  height: 100%; 
+  top: 0; 
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255,255,255,0.8); 
+  z-index: 2; 
+}
+
+.expanded-button {
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.2);
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 14px 36px 2px
+}
+
+.expanded-button label {
+  padding-left: 10px;
+}
+
+@media (min-width: 1200px) {
+  .expanded-food {
+    left: 95px;
+  }
+  .expanded-hops {
+    left: 166px;
+  }
+  .expanded-EBC {
+    left: 245px;
+  }
+  .expanded-bitterness {
+    left: 422px;
+  }
+}
+
+@media (min-width: 768px) {
+  .expanded-button {
+  position: absolute;
+  top: 140px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1200px){
+  .expanded-food {
+    left: 15px;
+  }
+  .expanded-hops {
+    left: 86px;
+  }
+  .expanded-EBC {
+    left: 165px;
+  }
+  .expanded-bitterness {
+    left: 342px;
+  }
+}
+
+.filters-container {
+  height: 66px;
+  display: flex;
+  align-items: center;
+}
+
+.fixed {
+  position: fixed;
+  background-color: #fff;
+  border-bottom: solid 1.5px #BCC1CF;
+  z-index: 1000;
+}
+
+.filters-buttons-container {
+  padding-left: 0px;
+  padding-right: 0px;
+  display: flex;
+}
+
+
+.filter-button-holder {
+  margin-right: 16px;
+  display: inline-block;
+}
+
+
+@media (min-width: 1200px) {
+    .filters-buttons-container {
+      padding-left: 80px;
+      padding-right: 80px;
+  }
+}
+
+.filter-button {
+  background-color: #fff;
+  border: solid 1px #BCC1CF;
+  border-radius: 4px;
+  padding: 6px 12px 6px 12px;
+  cursor: pointer;
+}
+
+.filter-active {
+  background-color: #2196F3;
+  color: #fff;
+  border: solid 1px rgb(7, 64, 249);
+}
+
+
+.search-form {
+
+}
+
+form.search-form input[type=text] {
+  float: left;
+  padding: 6px;
+  height: 38px;
+  border: solid 1px #BCC1CF;
+  border-radius: 4px 0px 0px 4px;
+  background: #fff;
+}
+
+form.search-form button {
+  float: left;
+  height: 38px;
+  padding: 10px;
+  background: #2196F3;
+  color: white;
+  font-size: 17px;
+  border: solid 1px #BCC1CF;
+  border-radius: 0px 4px 4px 0px;
+  border-left: none;
+  cursor: pointer;
+}
+
+form.search-form button:hover {
+  background: #0b7dda;
+}
+
+form.search-form::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+
+/* Main and overlay */
+
+@media (min-width: 768px) {
+  .overlay-on {
+    padding-top:66px;
+  }
+}
+
+/* Beer Cards */
+
+.beer-card-container {
+  height: 400px;
+  margin-bottom: 30px;
+}
+
+.beer-card-container a {
+  color: inherit;
+}
+
+.beer-card-container a:hover {
+  text-decoration: none;
+}
+
+.beer-card {
+  background-color: #fff;
+  border-radius: 4px;
+  max-height: 400px;
+  height: 400px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: 0.5s;
+}
+
+@media (min-width: 1200px) {
+  .beer-list {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
+
+.pic-container {
+  height: 100px;
+}
+
+.card-pic {
+  display: block;
+  width: auto;
+  height: 100%;
+}
+
+.beer-card:hover { /* Hover on the cards */
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, .15), 0 6px 20px 0 rgba(0, 0, 0, .1);
+}
+
+.beer-card::after { /* Hover on the cards */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  content: '';
+  opacity: 0;
+  z-index: -1;
+}
+.beer-card:hover, .beer-card:focus { /* Hover on the cards */
+  transform: scale3d(1.006, 1.006, 1);
+}
+.beer-card:hover::after, .beer-card:focus::after { /* Hover on the cards */
+  opacity: 1;
+}
+
+/* Beer Page */
+
+@media (min-width: 1200px) {
+  .beer-page-container  {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
+
+.go-back-button {
+  background-color: transparent;
+  padding-left: 0px;
+  border: none;
+}
+
+.go-back-button:hover {
+  cursor: pointer;
+}
