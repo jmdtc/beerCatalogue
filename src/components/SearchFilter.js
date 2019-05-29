@@ -27,7 +27,7 @@ class SearchFilter extends Component {
        
        return (
            <div className="filter-button-holder search-bar">
-             <form className="search-form" onSubmit={(e) => this.props.handleSubmit(e)}>
+             <form className="search-form" onSubmit={(e) => this.props.handleSubmit(e)} autoComplete="off">
                <input
                  type='text'
                  placeholder='Search for beer name'

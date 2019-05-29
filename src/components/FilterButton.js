@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 
-class SizeFilterButton extends Component {
+class FilterButton extends Component {
    
    render()  {
        const buttonClasses= this.props.active ? "filter-button filter-active" : "filter-button"
@@ -15,6 +15,6 @@ class SizeFilterButton extends Component {
    }  
 }
 
-export default SizeFilterButton
+export default FilterButton
 
 

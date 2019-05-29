@@ -39,10 +39,11 @@ class Filters extends Component {
            marks: {10:"Wheat", 25:"Pils", 40:"Ales", 120:"IPA++"},
            expanded: false
          },
-       ],
+       ]
      }
      this.handleFiltersClick = this.handleFiltersClick.bind(this)
      this.handleOverlayClick = this.handleOverlayClick.bind(this)
+     this.clearValue = this.clearValue.bind(this)
      this.handleSliderValue = this.handleSliderValue.bind(this)
      this.setState = this.setState.bind(this)
    }
@@ -110,6 +111,27 @@ class Filters extends Component {
        return {filterButtons: filterButtonsState}
      })
    }
+  
+   clearValue(filter) {
+     this.setState(prevState => {
+       const keysMin = Object.keys(filter).some(key => key === "min")
+       let clearedFilter  = {}
+       if (keysMin) {
+         const {min, max, ...props} = filter
+         clearedFilter = {...props, min, max}
+         clearedFilter.value[0] = min
+         clearedFilter.value[1] = max
+       }
+       else {
+         const {value, ...props} = filter
+         clearedFilter = {...props}
+         clearedFilter.value = typeof value === "object" ? [] : clearedFilter.value = ""
+       }
+       let [...filterButtonsState] = prevState.filterButtons
+       filterButtonsState[filterButtonsState.findIndex(filter => filter.name === name)] = clearedFilter
+       return {filterButtons: filterButtonsState}
+     }, () => console.log(this.state))
+   }
    
    render()  {
       const filterButtons = this.state.filterButtons.map(button => {
@@ -141,6 +163,7 @@ class Filters extends Component {
                         <ExpandedFilters
                           filterButtons={this.state.filterButtons}
                           handleSliderValue={this.handleSliderValue}
+                          clearValue={this.clearValue}
                         />
                       </div>
        
