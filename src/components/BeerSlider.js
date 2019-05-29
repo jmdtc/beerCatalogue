@@ -9,8 +9,9 @@ import Tooltip from 'rc-tooltip'
 class BeerSlider extends Component {
   constructor(props) {
     super(props)
-    const {value} = this.props.filterProps
-    this.state = {value}
+    this.state = {
+      
+    }
     this.setValue = this.setValue.bind(this)
   }
   
@@ -18,18 +19,17 @@ class BeerSlider extends Component {
     this.setState({ value: e })
   }
   
-  render() {
-    const createSliderWithTooltip = Slider.createSliderWithTooltip;
-    const Handle = Slider.Handle
-    const handle = (props) => {
-      const {value, ...restProps} = props
-      return (
-        <Handle value={value} {...restProps}/>
-      )
-    } 
-    const wrapperStyle = { width: 400, margin: 40 };
+  componentDidMount() {
+    this.setState({ value: this.props.filterProps.value });  
+  }  
   
+  componentDidUpdate(prevProps, prevState) {
     
+  }
+  
+  render() {
+    const wrapperStyle = { width: 400, margin: 40 };
+      
     return(
       <div className={this.props.classes}>
           <h3>{`${this.props.filterProps.filterKey.toUpperCase()} scale`}</h3>

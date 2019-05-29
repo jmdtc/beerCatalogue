@@ -14,7 +14,7 @@ const filterBySearchString = (beers, searchString) => {
   return filteredBeers
 }
 
-const filterByRange = (beers, range, dimension) => {
+const filterByRange = (beers, range, dimension, max) => {
   const filteredBeers =
         beers.filter(beer =>
                      beer[dimension] >= range[0] && beer[dimension] <= range[1])

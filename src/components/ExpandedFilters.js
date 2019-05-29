@@ -1,5 +1,6 @@
 import React, {Component} from "react"
 import BeerSlider from "./BeerSlider"
+import ExpandedFilterButtons from "./ExpandedFilterButtons"
 
 class ExpandedFilters extends Component {
   
@@ -21,18 +22,31 @@ class ExpandedFilters extends Component {
         </div>
   
   const EBCprops = this.props.filterButtons[2]
-  const EBCExpanded = <BeerSlider
-                        classes="expanded-button expanded-EBC"
-                        filterProps={EBCprops}
-                        handleSliderValue={this.props.handleSliderValue}
-                        />
+  const EBCExpanded =
+        <div className="expanded-button expanded-EBC">
+          <BeerSlider
+            filterProps={EBCprops}
+            handleSliderValue={this.props.handleSliderValue}
+          />
+          <ExpandedFilterButtons
+            filter={EBCprops}
+            clearValue={this.props.clearValue}
+          />
+        </div>
         
   const bitternessProps = this.props.filterButtons[3]
-  const bitternessExpanded = <BeerSlider
-                               classes="expanded-button expanded-bitterness"
-                               filterProps={bitternessProps}
-                               handleSliderValue={this.props.handleSliderValue}
-                               />
+  const bitternessExpanded = 
+        <div className="expanded-button expanded-bitterness">
+          <BeerSlider
+            filterProps={bitternessProps}
+            handleSliderValue={this.props.handleSliderValue}
+          />
+          <ExpandedFilterButtons
+            filter={bitternessProps}
+            clearValue={this.props.clearValue}
+          />
+        </div>
+
   
   if (this.props.filterButtons.length < 1) return
   return (
