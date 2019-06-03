@@ -61,7 +61,7 @@ class BeerList extends Component {
         const {filterKey, value} = object
         filters[filterKey] = value
       }
-      this.setState({filtersValues: filters})                    
+      this.setState({filtersValues: filters})
    }
 
    componentDidMount() {
