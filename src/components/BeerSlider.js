@@ -1,8 +1,7 @@
 import React, {Component} from "react"
 import 'rc-slider/assets/index.css';
 import 'rc-tooltip/assets/bootstrap.css';
-import Slider, { Range } from 'rc-slider'
-import Tooltip from 'rc-tooltip'
+import {Range} from 'rc-slider'
 
 
 
@@ -10,25 +9,19 @@ class BeerSlider extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      
+      value: this.props.filterProps.value
     }
-    this.setValue = this.setValue.bind(this)
+    this.handleChange = this.handleChange.bind(this)
   }
+
   
-  setValue(e) {
+  handleChange(e) {
     this.setState({ value: e })
   }
   
-  componentDidMount() {
-    this.setState({ value: this.props.filterProps.value });  
-  }  
-  
-  componentDidUpdate(prevProps, prevState) {
-    
-  }
-  
   render() {
-    const wrapperStyle = { width: 400, margin: 40 };
+    const wrapperStyle = { width: 400, margin: 40 }
+
       
     return(
       <div className={this.props.classes}>
@@ -37,9 +30,9 @@ class BeerSlider extends Component {
             <Range
               min={this.props.filterProps.min}
               max={this.props.filterProps.max}
-              value={this.state.value}
+              value={[this.state.value[0], this.state.value[1]]}
               marks={this.props.filterProps.marks}
-              onChange={e => this.setValue(e)}
+              onChange={e => this.handleChange(e)}
               onAfterChange={(values) => this.props.handleSliderValue(values,this.props.filterProps)}
             />
           </div>

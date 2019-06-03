@@ -45,6 +45,7 @@ class Filters extends Component {
      this.handleOverlayClick = this.handleOverlayClick.bind(this)
      this.clearValue = this.clearValue.bind(this)
      this.handleSliderValue = this.handleSliderValue.bind(this)
+     this.handleApplyButton = this.handleApplyButton.bind(this)
      this.setState = this.setState.bind(this)
    }
   
@@ -72,15 +73,8 @@ class Filters extends Component {
      })
    }
   
-    handleOverlayClick(event) {
-      const element = document.querySelector(".expanded-button")
-      const isVisible = elem => !!elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length )
-      const hideOnClickOutside = (element, setState) => {
-         const removeClickListener = () => {
-            document.removeEventListener('click', outsideClickListener)
-         }
-      	 const outsideClickListener = event => {
-            if (!element.contains(event.target) && isVisible(element)) {
+    hideOverlay(setState) {
+      const outsideClickListener = event => {
               setState(prevState => {
                  const [...filterButtonsState] = prevState.filterButtons
                  const updatedFilterButtons = filterButtonsState.map(button => {
@@ -94,12 +88,17 @@ class Filters extends Component {
                this.props.handleFiltersValues(this.state.filterButtons)
                const main = document.getElementById("main")
                main.classList.remove('overlay-on')
-               removeClickListener()
-            }
-          }  
+               document.removeEventListener('click', outsideClickListener)
+          }
          outsideClickListener(event)
+    }
+  
+    handleOverlayClick() {
+      const element = document.querySelector(".expanded-button")
+      const isVisible = elem => !!elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length )
+      if (!element.contains(event.target) && isVisible(element)) {
+        this.hideOverlay(this.setState)
       }
-     hideOnClickOutside(element, this.setState)   
     }
   
    handleSliderValue(values, filter) {
@@ -128,9 +127,14 @@ class Filters extends Component {
          clearedFilter.value = typeof value === "object" ? [] : clearedFilter.value = ""
        }
        let [...filterButtonsState] = prevState.filterButtons
-       filterButtonsState[filterButtonsState.findIndex(filter => filter.name === name)] = clearedFilter
+       filterButtonsState[filterButtonsState.findIndex(filter => filter.name === clearedFilter.name)] = clearedFilter
        return {filterButtons: filterButtonsState}
-     }, () => console.log(this.state))
+     })
+   }
+  
+   handleApplyButton() {
+     this.props.handleFiltersValues(this.state.filterButtons)
+     this.hideOverlay(this.setState)
    }
    
    render()  {
@@ -164,6 +168,7 @@ class Filters extends Component {
                           filterButtons={this.state.filterButtons}
                           handleSliderValue={this.handleSliderValue}
                           clearValue={this.clearValue}
+                          handleApplyButton={this.handleApplyButton}
                         />
                       </div>
        

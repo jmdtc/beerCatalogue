@@ -31,6 +31,7 @@ class ExpandedFilters extends Component {
           <ExpandedFilterButtons
             filter={EBCprops}
             clearValue={this.props.clearValue}
+            handleApplyButton={this.props.handleApplyButton}
           />
         </div>
         
@@ -44,6 +45,7 @@ class ExpandedFilters extends Component {
           <ExpandedFilterButtons
             filter={bitternessProps}
             clearValue={this.props.clearValue}
+            handleApplyButton={this.props.handleApplyButton}
           />
         </div>
 
