@@ -296,6 +296,16 @@ form.search-form::after {
   opacity: 1;
 }
 
+.card-description {
+  max-height: 100px;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+
+.card-title {
+  font-size: 2rem;
+}
+
 /* Beer Page */
 
 @media (min-width: 1200px) {

@@ -3,6 +3,8 @@ import NavBar from "./NavBar"
 import Filters from "./Filters"
 import createBeerCards from "../logic/createBeerCards"
 import createBeerPage  from "../logic/createBeerPage"
+import hopsList from "../datas/hopsData"
+
 
 class BeerList extends Component {
    constructor() {
@@ -106,7 +108,7 @@ class BeerList extends Component {
    render()  {
        let beerCards = createBeerCards(this.state.beers, this.handleClick, this.state.filtersValues)
        let beerPage = createBeerPage(this.state.beers, this.state.beerPage, this.handleClick)
-       const text = this.state.isLoading ? "Loading..." : null
+       const loadingText = this.state.isLoading ? "Loading..." : null
        
        return (
            <div>
@@ -125,7 +127,7 @@ class BeerList extends Component {
                  <div>
                    {this.state.cardIsVisited && beerPage}
                  </div>
-                 <h1 className="loading">{text}</h1>
+                 <h1 className="loading">{loadingText}</h1>
              </div>
            </div>
        )
