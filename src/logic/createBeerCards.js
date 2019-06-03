@@ -13,6 +13,8 @@ export default function createBeerCards(beers, handleClick, filters) {
               img={beer.image_url}
               title={beer.name}
               description={beer.description}
+              ibu={beer.ibu}
+              ebc={beer.ebc}
               handleClick={handleClick}
       />
   })
