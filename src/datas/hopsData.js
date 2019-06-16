@@ -1,4 +1,4 @@
-const hopsList = [
+const hopsData = [
   {
     name: 'Fuggles',
     id: 1
@@ -681,4 +681,4 @@ const hopsList = [
   }
 ]
 
-export default hopsList
+export default hopsData

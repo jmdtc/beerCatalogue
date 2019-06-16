@@ -3,6 +3,9 @@ import NavBar from "./NavBar"
 import Filters from "./Filters"
 import createBeerCards from "../logic/createBeerCards"
 import createBeerPage  from "../logic/createBeerPage"
+import getFetchUrlParams from "../logic/getFetchUrlParams"
+import getNextMultiple from "../logic/getNextMultiple"
+import isThereAFilterOn from "../logic/isThereAFilterOn"
 import hopsList from "../datas/hopsData"
 
 
@@ -11,28 +14,41 @@ class BeerList extends Component {
        super()
        this.state = {
          isLoading: false,
-         hasMore: true,
          error: false,
+         hasMore: true,
          cardIsVisited: false,
          beers: [],
          beerPage: 0,
+         defaultNumberOfBeers: 12,
          filtersValues: {
            foodPairing: "",
            hops: [],
            ebc: [],
            ibu: [],
            searchString: ""
+         },
+         rangeLimits: {
+           ebcRange: [0,60],
+           ibuRange: [0,140],
          }
        }
       this.handleScroll = this.handleScroll.bind(this)
       this.handleClick = this.handleClick.bind(this)
       this.handleSubmit = this.handleSubmit.bind(this)
       this.handleFiltersValues = this.handleFiltersValues.bind(this)
+      this.clearSearchFilter = this.clearSearchFilter.bind(this)
     } 
     
     handleScroll() {
       window.onscroll = () => {
-        if (this.state.error || this.state.isLoading || !this.state.hasMore) return       
+        const anyFilterOn = isThereAFilterOn(this.state.filtersValues,
+                                             this.state.rangeLimits.ebcRange,
+                                             this.state.rangeLimits.ibuRange)
+        if (this.state.error ||
+            this.state.isLoading ||
+            !this.state.hasMore ||
+            anyFilterOn) return
+        
         if (
           (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight && !this.state.cardIsVisited
         ) {
@@ -40,9 +56,16 @@ class BeerList extends Component {
         }
       }
     }
-   
+  
+   clearSearchFilter(e) {
+     this.setState({isLoading: true}, () => {
+       this.setState({isLoading: false,
+                      filtersValues:{...this.state.filtersValues, searchString: ""}})
+     })
+   }
+  
    handleClick(id) {
-     if (!this.state.beerPage && id===0) return
+     if ((!this.state.beerPage && id===0) || this.state.isLoading) return
      this.setState(prevState => {
        return {
        cardIsVisited: !prevState.cardIsVisited,
@@ -54,7 +77,16 @@ class BeerList extends Component {
    handleSubmit(e) {
      e.preventDefault()
      let {name, value} = e.target.searchString
-     this.setState({filtersValues:{...this.state.filtersValues, [name]: value}})
+     this.setState({filtersValues:{...this.state.filtersValues, [name]: value}}, () => {
+        const anyFilterOn = isThereAFilterOn(this.state.filtersValues,
+                                      this.state.rangeLimits.ebcRange,
+                                      this.state.rangeLimits.ibuRange)
+        if (this.state.error ||
+            this.state.isLoading ||
+            !this.state.hasMore ||
+            !anyFilterOn) return
+        this.loadBeerCards()
+     })    
    }
   
    handleFiltersValues(filterValues) {
@@ -63,7 +95,16 @@ class BeerList extends Component {
         const {filterKey, value} = object
         filters[filterKey] = value
       }
-      this.setState({filtersValues: filters})
+      this.setState({filtersValues: filters}, () => {
+        const anyFilterOn = isThereAFilterOn(this.state.filtersValues,
+                                             this.state.rangeLimits.ebcRange,
+                                             this.state.rangeLimits.ibuRange)
+        if (this.state.error ||
+            this.state.isLoading ||
+            !this.state.hasMore ||
+            !anyFilterOn) return
+        this.loadBeerCards()
+      })
    }
 
    componentDidMount() {
@@ -72,24 +113,25 @@ class BeerList extends Component {
    }
   
    componentWillUnmount() {
-      window.removeEventListener('scroll', this.handleScroll, true);
+      window.removeEventListener('scroll', this.handleScroll, true)
    }
    
    loadBeerCards() {
        this.setState({isLoading: true}, () => {
-         const beers = this.state.beers;
-         const page = (this.state.beers.length / 12) + 1;
-         const hasMore = Number.isInteger(page)
-         if(hasMore === false) {
-           this.setState({hasMore: false, isLoading: false})
-           return
-         }
-         fetch(`https://api.punkapi.com/v2/beers?per_page=12&page=${page}`)
+         const beers = this.state.beers
+         const nextPage = getNextMultiple(this.state.defaultNumberOfBeers, this.state.beers.length) / this.state.defaultNumberOfBeers
+         const urlParams = getFetchUrlParams(this.state.filtersValues, this.state.rangeLimits, nextPage)
+         
+         const fetchBeers = (urlParams) => {
+           fetch(urlParams)
            .then(response => response.json())
            .then(data => {
+               if (!data.length) return
                for (let item of data) {
+                 if (beers.some(el => el.id === item.id)) continue
                  beers.push(item)
                }
+               const hasMore = beers.length !== 325 ? true : false
                this.setState({
                    isLoading: false,
                    hasMore: hasMore,
@@ -100,24 +142,39 @@ class BeerList extends Component {
              this.setState({
                error: err.message,
                isLoading: false,
-             });
+             })
            })
+         } 
+         
+         if (urlParams.includes("?per_page=" + this.state.defaultNumberOfBeers)) {
+           fetchBeers(urlParams)
+         }
+         else {
+           for (let i=1; i < 10 ; i++) {
+             fetchBeers(urlParams + "&per_page=80&page=" + i)
+           }
+         }
         })
-   }
+    }
+  
+
  
    render()  {
        let beerCards = createBeerCards(this.state.beers, this.handleClick, this.state.filtersValues)
        let beerPage = createBeerPage(this.state.beers, this.state.beerPage, this.handleClick)
        const loadingText = this.state.isLoading ? "Loading..." : null
+
        
        return (
            <div>
              <NavBar handleClick={this.handleClick}/>
              {!this.state.cardIsVisited && <Filters
                                              filtersValues={this.state.filtersValues}
+                                             rangeLimits={this.state.rangeLimits}
                                              handleSubmit={this.handleSubmit}
                                              handleSliders={this.handleSliders}
                                              handleFiltersValues={this.handleFiltersValues}
+                                             clearSearchFilter={this.clearSearchFilter}
                                             />
              }
              <div className="container-fluid" id="main">

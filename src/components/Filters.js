@@ -5,12 +5,12 @@ import ExpandedFilters from "./ExpandedFilters"
 
 
 class Filters extends Component {
-   constructor() {
-     super()
+   constructor(props) {
+     super(props)
      this.state = {
        filterButtons: [
          {
-           name: "Food",
+           name: "Food Pairing",
            filterKey: "foodPairing",
            value: "",
            expanded: false
@@ -24,18 +24,18 @@ class Filters extends Component {
          {
            name: "EBC / SRM - Color",
            filterKey: "ebc",
-           value: [0,60],
-           min: 0,
-           max: 60,
+           value: [this.props.rangeLimits.ebcRange[0],this.props.rangeLimits.ebcRange[1]],
+           min: this.props.rangeLimits.ebcRange[0],
+           max: this.props.rangeLimits.ebcRange[1],
            marks: {0:"Lager", 16:"Wheat/Ales", 26:"Amber", 45:"Dark"},
            expanded: false
          },
          {
            name: "Bitterness",
            filterKey: "ibu",
-           value: [0,140],
-           min: 0,
-           max: 140,
+           value: [this.props.rangeLimits.ibuRange[0], this.props.rangeLimits.ibuRange[1]],
+           min: this.props.rangeLimits.ibuRange[0],
+           max: this.props.rangeLimits.ibuRange[1],
            marks: {10:"Wheat", 25:"Pils", 40:"Ales", 120:"IPA++"},
            expanded: false
          },
@@ -133,7 +133,6 @@ class Filters extends Component {
    }
   
    handleApplyButton() {
-     this.props.handleFiltersValues(this.state.filterButtons)
      this.hideOverlay(this.setState)
    }
    
@@ -141,24 +140,27 @@ class Filters extends Component {
       const filterButtons = this.state.filterButtons.map(button => {
           if("min" in button) {
             return <FilterButton
-                   key={button.name}
-                   text={button.name}
-                   classes="filter-button"
-                   active={button.expanded
+                     key={button.name}
+                     name={button.name}
+                     range={[button.min, button.max]}
+                     value={button.value}
+                     classes="filter-button"
+                     active={button.expanded
                            || (button.min !== button.value[0] || button.max !== button.value[1])
                            ? true : false}
-                   handleFiltersClick={this.handleFiltersClick}
-              />
+                     handleFiltersClick={this.handleFiltersClick}
+                   />
           }
           else {
             return <FilterButton
-                   key={button.name}
-                   text={button.name}
-                   classes="filter-button"
-                   active={button.expanded || button.value.length > 0
+                     key={button.name}
+                     name={button.name}
+                     value={button.value}
+                     classes="filter-button"
+                     active={button.expanded || button.value.length > 0
                            ? true : false}
-                   handleFiltersClick={this.handleFiltersClick}
-              />
+                     handleFiltersClick={this.handleFiltersClick}
+                   />
           }
           
        })      
@@ -182,7 +184,12 @@ class Filters extends Component {
            <div className={containerClasses}>
              <div className="col filters-buttons-container">
                {filterButtons}
-               <SearchFilter handleSubmit={this.props.handleSubmit}/>
+               <SearchFilter
+                 filterValue={this.props.filtersValues.searchString}
+                 handleSubmit={this.props.handleSubmit}
+                 clearSearchFilter={this.props.clearSearchFilter}
+                 id="searchBar"
+                />
              </div>
            </div>
         </div>
