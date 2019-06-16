@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import HopsFilter from "./HopsFilter"
 import BeerSlider from "./BeerSlider"
 import ExpandedFilterButtons from "./ExpandedFilterButtons"
 
@@ -12,13 +13,11 @@ class ExpandedFilters extends Component {
             <input /> 
           </form>
         </div>
-        
+  
+  const hopsProps= this.props.filterButtons[1]
   const hopsExpanded =
         <div className="expanded-button expanded-hops">
-          <input type="checkbox" name="hops" value="" id="hops1"/><label htmlFor="">Hops 1</label><br/>
-          <input type="checkbox" name="twentyLitters" value="" /><label>Hops 1</label><br/>
-          <input type="checkbox" name="twentyLitters" value="" /><label>Hops 1</label><br/>
-          <input type="checkbox" name="twentyLitters" value="" /><label>Hops 1</label><br/>
+          <HopsFilter />
         </div>
   
   const EBCprops = this.props.filterButtons[2]
