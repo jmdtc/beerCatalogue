@@ -1,5 +1,6 @@
 import React, {Component} from "react"
 import HopPill from "./HopPill"
+import ExpandedFilterButtons from "./ExpandedFilterButtons"
 import hopsData from "../datas/hopsData"
 
 class HopsFilter extends Component {
@@ -11,21 +12,30 @@ class HopsFilter extends Component {
     }
     this.handleStringChange = this.handleStringChange.bind(this)
     this.handlePillClick = this.handlePillClick.bind(this)
+    this.clearSelectedPill = this.clearSelectedPill.bind(this)
   }
-  
+
   handleStringChange(e) {
     const {value} = e.target
     this.setState({searchString: value})
   }
-  
+
   handlePillClick(id) {
     const clickedPill = hopsData.find(hop => hop.id === id)
     if (this.state.activeHops.some(hop => hop === clickedPill)) return
-    
+
     this.setState(prevState => {
       const updatedHops = prevState.activeHops
       updatedHops.push(clickedPill)
       return {activeHops: updatedHops}
+    })
+  }
+
+  clearSelectedPill(id) {
+    this.setState(prevState => {
+      const clickedPill = prevState.activeHops.find(hop => hop.id === id)
+      const updatedActiveHops = prevState.activeHops.filter(el => el !== clickedPill)
+      return {activeHops: updatedActiveHops}
     })
   }
 
@@ -62,7 +72,7 @@ class HopsFilter extends Component {
     const pillsListHeight = containerHeight - inputHeight - 12
     styles.pillsListDefault.height = pillsListHeight + "px"
 
-    
+
     const hops = hopsData
     const hopPills = hops.filter(hops => !this.state.activeHops.some(activeHop => activeHop.id === hops.id) &&
                                          hops.name.toLowerCase().includes(this.state.searchString.toLowerCase()))
@@ -81,15 +91,16 @@ class HopsFilter extends Component {
                                                                     key={selectedHop.id}
                                                                     selected={true}
                                                                     handlePillClick={this.handlePillClick}
-                                                                    class="selected-pill"/>    
+                                                                    clearSelectedPill={this.clearSelectedPill}
+                                                                    class="selected-pill"/>
                                                           })
-    
+
     if (selectedPills.length > 0) {
       const height = parseInt(styles.filterWrapper.height, 10) + (selectedPills.length * 42) + "px"
       styles.filterWrapper.height = height
-    }   
-    
-    return(      
+    }
+
+    return(
       <div style={styles.filterWrapper}>
         <div style={styles.inputWrapper}><input
                                            type="text"
@@ -107,4 +118,3 @@ class HopsFilter extends Component {
 }
 
 export default HopsFilter
-
