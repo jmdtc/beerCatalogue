@@ -2,6 +2,7 @@ import React, {Component} from "react"
 import FilterButton from "./FilterButton"
 import SearchFilter from "./SearchFilter"
 import ExpandedFilters from "./ExpandedFilters"
+import hopsData from "../datas/hopsData"
 
 
 class Filters extends Component {
@@ -48,7 +49,7 @@ class Filters extends Component {
      this.handleApplyButton = this.handleApplyButton.bind(this)
      this.setState = this.setState.bind(this)
    }
-  
+
    handleFiltersClick(buttonName) {
      this.setState(prevState => {
        const filterButtons = prevState.filterButtons
@@ -72,7 +73,7 @@ class Filters extends Component {
        main.classList.remove('overlay-on')
      })
    }
-  
+
     hideOverlay(setState) {
       const outsideClickListener = event => {
               setState(prevState => {
@@ -92,7 +93,7 @@ class Filters extends Component {
           }
          outsideClickListener(event)
     }
-  
+
     handleOverlayClick() {
       const element = document.querySelector(".expanded-button")
       const isVisible = elem => !!elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length )
@@ -100,7 +101,7 @@ class Filters extends Component {
         this.hideOverlay(this.setState)
       }
     }
-  
+
    handleSliderValue(values, filter) {
      const {name, ...props} = filter
      this.setState(prevState => {
@@ -110,7 +111,7 @@ class Filters extends Component {
        return {filterButtons: filterButtonsState}
      })
    }
-  
+
    clearValue(filter) {
      this.setState(prevState => {
        const keysMin = Object.keys(filter).some(key => key === "min")
@@ -131,11 +132,11 @@ class Filters extends Component {
        return {filterButtons: filterButtonsState}
      })
    }
-  
+
    handleApplyButton() {
      this.hideOverlay(this.setState)
    }
-   
+
    render()  {
       const filterButtons = this.state.filterButtons.map(button => {
           if("min" in button) {
@@ -162,8 +163,8 @@ class Filters extends Component {
                      handleFiltersClick={this.handleFiltersClick}
                    />
           }
-          
-       })      
+
+       })
 
       const overlay = <div id="overlay" onClick={(event) => {this.handleOverlayClick(event);}}>
                         <ExpandedFilters
@@ -173,11 +174,11 @@ class Filters extends Component {
                           handleApplyButton={this.handleApplyButton}
                         />
                       </div>
-       
+
        const containerClasses = this.state.filterButtons.some(button => button.expanded) === false ?
              "container-fluid filters-container" :
              "container-fluid filters-container fixed"
-       
+
        return (
          <div>
            {this.state.filterButtons.some(button => button.expanded) && overlay}
@@ -193,10 +194,8 @@ class Filters extends Component {
              </div>
            </div>
         </div>
-       )      
-   }  
+       )
+   }
 }
 
 export default Filters
-
-

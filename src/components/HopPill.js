@@ -4,7 +4,7 @@ class HopPill extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      
+
     }
   }
 
@@ -13,7 +13,7 @@ class HopPill extends Component {
     const styles = {
       link: {
         color: "inherit",
-        fontSize:"14px", 
+        fontSize:"14px",
         paddingLeft: "16px",
         textAlign: "center",
         verticalAlign: "middle",
@@ -37,16 +37,16 @@ class HopPill extends Component {
         top: "50%",
         lineHeight:"0.25",
         cursor: "pointer",
-        color: "#757575"
+        color: "#757575",
       },
-      span: {
-        position: "relative"
-      }
     }
-    
+
     const divClass = this.props.class ?  "hop-pill " + this.props.class : "hop-pill"
-    const clearCross = <i className="fas fa-times" style={styles.clearCross}></i>
-    
+    const clearCross = <i
+      className="fas fa-times"
+      style={styles.clearCross}
+      onClick={() => {this.props.clearSelectedPill(this.props.id)}}></i>
+
     return (
       <div
         style={styles.div}
@@ -64,4 +64,3 @@ class HopPill extends Component {
 }
 
 export default HopPill
-
