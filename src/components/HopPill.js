@@ -1,8 +1,8 @@
 import React, {Component} from "react"
 
 class HopPill extends Component {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
     this.state = {
 
     }
@@ -26,7 +26,7 @@ class HopPill extends Component {
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
-        marginLeft: "6px",
+        margin: "auto",
       },
       clearCross: {
         display: "block",
@@ -40,7 +40,8 @@ class HopPill extends Component {
         color: "#757575",
       },
     }
-
+    
+    this.props.selected ? styles.div.backgroundColor = "red" : ""
     const divClass = this.props.class ?  "hop-pill " + this.props.class : "hop-pill"
     const clearCross = <i
       className="fas fa-times"

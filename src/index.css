@@ -257,10 +257,6 @@ form.search-form button:hover {
   padding: 0px;
 }
 
-.selected-pill {
-  background-color: red;
-  margin: auto;
-}
 
 .apply-button {
   color: #2196F3;

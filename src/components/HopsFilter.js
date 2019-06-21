@@ -4,41 +4,19 @@ import ExpandedFilterButtons from "./ExpandedFilterButtons"
 import hopsData from "../datas/hopsData"
 
 class HopsFilter extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       searchString: "",
-      activeHops: []
     }
     this.handleStringChange = this.handleStringChange.bind(this)
-    this.handlePillClick = this.handlePillClick.bind(this)
-    this.clearSelectedPill = this.clearSelectedPill.bind(this)
   }
 
   handleStringChange(e) {
     const {value} = e.target
     this.setState({searchString: value})
   }
-
-  handlePillClick(id) {
-    const clickedPill = hopsData.find(hop => hop.id === id)
-    if (this.state.activeHops.some(hop => hop === clickedPill)) return
-
-    this.setState(prevState => {
-      const updatedHops = prevState.activeHops
-      updatedHops.push(clickedPill)
-      return {activeHops: updatedHops}
-    })
-  }
-
-  clearSelectedPill(id) {
-    this.setState(prevState => {
-      const clickedPill = prevState.activeHops.find(hop => hop.id === id)
-      const updatedActiveHops = prevState.activeHops.filter(el => el !== clickedPill)
-      return {activeHops: updatedActiveHops}
-    })
-  }
-
+  
   render() {
     const styles = {
       input: {
@@ -60,6 +38,7 @@ class HopsFilter extends Component {
       pillsListDefault: {
         height: "",
         overflow: "auto",
+        overflowY: "overlay",
       },
       selectedPill : {
        margin: "auto",
@@ -67,31 +46,33 @@ class HopsFilter extends Component {
       selectedPillsList : {
       },
     }
+    //console.log(this.props.filterProps.value)
+    //console.log(this.state.activeHops)
     const containerHeight = parseInt(styles.filterWrapper.height, 10) - parseInt(styles.filterWrapper.paddingTop, 10)
     const inputHeight = parseInt(styles.inputWrapper.marginBottom, 10) + parseInt(styles.inputWrapper.height, 10)
     const pillsListHeight = containerHeight - inputHeight - 12
     styles.pillsListDefault.height = pillsListHeight + "px"
 
-
     const hops = hopsData
-    const hopPills = hops.filter(hops => !this.state.activeHops.some(activeHop => activeHop.id === hops.id) &&
+    const hopPills = hops.filter(hops => !this.props.filterProps.value.some(activeHop => activeHop.id === hops.id) &&
                                          hops.name.toLowerCase().includes(this.state.searchString.toLowerCase()))
                          .map(hop => {return <HopPill
                                                text={hop.name}
                                                id={hop.id}
                                                key={hop.id}
                                                selected={false}
-                                               handlePillClick={this.handlePillClick}/>
+                                               handlePillClick={this.props.handlePillClick}
+                                               clearSelectedPill = {this.props.clearSelectedPill}/>
                                      })
 
-    const selectedHops = this.state.activeHops
+    const selectedHops = this.props.filterProps.value
     const selectedPills = selectedHops.map(selectedHop => {return <HopPill
                                                                     text={selectedHop.name}
                                                                     id={selectedHop.id}
                                                                     key={selectedHop.id}
                                                                     selected={true}
-                                                                    handlePillClick={this.handlePillClick}
-                                                                    clearSelectedPill={this.clearSelectedPill}
+                                                                    handlePillClick={this.props.handlePillClick}
+                                                                    clearSelectedPill={this.props.clearSelectedPill}
                                                                     class="selected-pill"/>
                                                           })
 
