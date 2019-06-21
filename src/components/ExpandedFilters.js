@@ -19,7 +19,9 @@ class ExpandedFilters extends Component {
         <div className="expanded-button expanded-hops">
           <HopsFilter
             filterProps={hopsProps}
-            clearValue={this.clearValue}
+            handlePillClick={this.props.handlePillClick}
+            clearSelectedPill = {this.props.clearSelectedPill}
+            clearValue={this.props.clearValue}
             handleApplyButton={this.handleApplyButton}
           />
         </div>

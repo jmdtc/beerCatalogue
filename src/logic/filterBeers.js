@@ -5,6 +5,20 @@ const filterBySearchString = (beers, searchString) => {
   return filteredBeers
 }
 
+const filterByHops = (beers, hops) => {
+  const containsHop = (hopElement) => {
+    for (const item of hops) {
+      if (hopElement.name === item.name)
+        return true
+    }
+    return false
+  }
+  
+  const filteredBeers = 
+         beers.filter(beer => beer.ingredients.hops.some(containsHop))
+  return filteredBeers
+}
+
 const filterByRange = (beers, range, dimension, max) => {
   const updatedRange = range[1] === max ? [range[0], 100000] : range
   const filteredBeers =
@@ -13,11 +27,16 @@ const filterByRange = (beers, range, dimension, max) => {
   return filteredBeers
 }
 
+const filterByArray = () => {
+   
+ }
+
 export default function filterBeers(beers, filters) {
   if (beers.length < 1) return
-  const {size, hops, ebc, ibu, searchString} = filters
+  const {hops, ebc, ibu, searchString} = filters
   const filteredByName = searchString.length > 0 ? filterBySearchString(beers, searchString) : beers
-  const filteredByEbc = ebc.length > 0 ? filterByRange(filteredByName, ebc, "ebc", 60) : filteredByName
+  const filteredByHops = hops.length > 0 ? filterByHops(beers, hops) : filteredByName
+  const filteredByEbc = ebc.length > 0 ? filterByRange(filteredByHops, ebc, "ebc", 60) : filteredByHops
   const filteredByIbu = ibu.length > 0 ? filterByRange(filteredByEbc, ibu, "ibu", 140) : filteredByEbc
   return filteredByIbu
 }

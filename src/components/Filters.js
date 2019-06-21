@@ -46,6 +46,8 @@ class Filters extends Component {
      this.handleOverlayClick = this.handleOverlayClick.bind(this)
      this.clearValue = this.clearValue.bind(this)
      this.handleSliderValue = this.handleSliderValue.bind(this)
+     this.handlePillClick = this.handlePillClick.bind(this)
+     this.clearSelectedPill = this.clearSelectedPill.bind(this)
      this.handleApplyButton = this.handleApplyButton.bind(this)
      this.setState = this.setState.bind(this)
    }
@@ -111,6 +113,29 @@ class Filters extends Component {
        return {filterButtons: filterButtonsState}
      })
    }
+  
+   handlePillClick(id) {
+    const clickedPill = hopsData.find(hop => hop.id === id)
+    if (this.state.filterButtons[1].value.some(hop => hop === clickedPill)) return
+
+    this.setState(prevState => {
+      const updatedHopsButton = prevState.filterButtons[1]
+      updatedHopsButton.value.push(clickedPill)
+      let filterButtons = prevState.filterButtons
+      filterButtons[1] = updatedHopsButton
+      return {filterButtons: filterButtons}
+    })
+  }
+
+  clearSelectedPill(id) {
+    this.setState(prevState => {
+      const clickedPill = prevState.filterButtons[1].value.find(hop => hop.id === id)
+      const updatedHops = prevState.filterButtons[1].value.filter(el => el !== clickedPill)
+      let filterButtons = prevState.filterButtons
+      filterButtons[1].value = updatedHops
+      return {filterButtons: filterButtons}
+    })
+  }
 
    clearValue(filter) {
      this.setState(prevState => {
@@ -172,6 +197,8 @@ class Filters extends Component {
                           handleSliderValue={this.handleSliderValue}
                           clearValue={this.clearValue}
                           handleApplyButton={this.handleApplyButton}
+                          handlePillClick={this.handlePillClick}
+                          clearSelectedPill = {this.clearSelectedPill}
                         />
                       </div>
 
