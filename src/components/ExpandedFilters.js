@@ -1,29 +1,32 @@
 import React, {Component} from "react"
-import HopsFilter from "./HopsFilter"
+import PillsFilter from "./PillsFilter"
+import FoodFilter from "./FoodFilter"
 import BeerSlider from "./BeerSlider"
 import ExpandedFilterButtons from "./ExpandedFilterButtons"
+import scalesDescriptions from "../datas/scalesDescriptions"
 
 class ExpandedFilters extends Component {
 
   render() {
+    const foodProps= this.props.filterButtons[0]
     const foodExpanded =
         <div className="expanded-button expanded-food">
-          <h3>Search food pairing</h3>
-          <form>
-            <input />
-          </form>
+            <FoodFilter
+              filterProps={foodProps}
+              handleFoodSubmit={this.props.handleFoodSubmit}
+              clearFoodPill={this.props.clearFoodPill}
+              clearValue={this.props.clearValue}
+              handleApplyButton={this.props.handleApplyButton}/>
         </div>
 
   const hopsProps= this.props.filterButtons[1]
   const hopsExpanded =
-        <div className="expanded-button expanded-hops">
-          <HopsFilter
+        <div>
+          <PillsFilter
             filterProps={hopsProps}
             handlePillClick={this.props.handlePillClick}
-            clearSelectedPill = {this.props.clearSelectedPill}
             clearValue={this.props.clearValue}
-            handleApplyButton={this.handleApplyButton}
-          />
+            handleApplyButton={this.props.handleApplyButton}/>
         </div>
 
   const EBCprops = this.props.filterButtons[2]
@@ -31,6 +34,7 @@ class ExpandedFilters extends Component {
         <div className="expanded-button expanded-EBC">
           <BeerSlider
             filterProps={EBCprops}
+            paragraph={scalesDescriptions.ebc}
             handleSliderValue={this.props.handleSliderValue}
           />
           <ExpandedFilterButtons
@@ -45,6 +49,7 @@ class ExpandedFilters extends Component {
         <div className="expanded-button expanded-bitterness">
           <BeerSlider
             filterProps={bitternessProps}
+            paragraph={scalesDescriptions.ibu}
             handleSliderValue={this.props.handleSliderValue}
           />
           <ExpandedFilterButtons

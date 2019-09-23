@@ -1,19 +1,28 @@
 const getFetchUrlParams = (filtersValues, rangeLimits, pageNumber) => {
       const replaceSpacesWithUnderscores = (string) => {
         let stringWithUnderscores = ""
-        for (var i = 0; i < string.length; i++) {
+        for (let i = 0; i < string.length; i++) {
           string[i] === " " ? stringWithUnderscores += "_" : stringWithUnderscores += string[i]
         }
         return stringWithUnderscores
       }
 
-      const foodString =  "food=" + replaceSpacesWithUnderscores(filtersValues.foodPairing)
-      const {ebc, ibu} = filtersValues
+      const {ebc, ibu, foodPairing, hops} = filtersValues
       const nameString = replaceSpacesWithUnderscores(filtersValues.searchString)
+      const arrayOfUrl = []
+      const urlBase = "https://api.punkapi.com/v2/beers"
       
       let urlParameters = "?"
-      if (filtersValues.foodPairing.length > 0) {
-        urlParameters += foodString
+      if (foodPairing.length > 0 || hops.length > 0 ) {
+        for (const item of foodPairing) {
+          const url = urlBase + "?food=" + replaceSpacesWithUnderscores(item.text)
+          arrayOfUrl.push(url.toLowerCase())
+        }
+        for (const item of hops) {
+          const url = urlBase + "?hops=" + replaceSpacesWithUnderscores(item.name)
+          arrayOfUrl.push(url.toLowerCase())
+        }
+        return arrayOfUrl
       }
       if ((ebc[0] !== rangeLimits.ebcRange[0])&&(ebc.length > 0)) {
         urlParameters[urlParameters.length-1] !== "?" ?
@@ -41,9 +50,13 @@ const getFetchUrlParams = (filtersValues, rangeLimits, pageNumber) => {
         urlParameters += ("name=" + nameString)
       }
       if(urlParameters === "?") {
-        return "https://api.punkapi.com/v2/beers?per_page=12&page=" + pageNumber
+        arrayOfUrl.push(urlBase + "?per_page=12&page=" + pageNumber)
+        return arrayOfUrl
       }
-      return "https://api.punkapi.com/v2/beers"+ urlParameters
+      for (let i=1; i < 10 ; i++) {
+        arrayOfUrl.push(urlBase + urlParameters + "&per_page=80&page=" + i)
+      }
+      return arrayOfUrl
 }
 
 export default getFetchUrlParams

@@ -6,7 +6,6 @@ import createBeerPage  from "../logic/createBeerPage"
 import getFetchUrlParams from "../logic/getFetchUrlParams"
 import getNextMultiple from "../logic/getNextMultiple"
 import isThereAFilterOn from "../logic/isThereAFilterOn"
-import hopsList from "../datas/hopsData"
 
 
 class BeerList extends Component {
@@ -21,10 +20,10 @@ class BeerList extends Component {
          beerPage: 0,
          defaultNumberOfBeers: 12,
          filtersValues: {
-           foodPairing: "",
+           foodPairing: [],
            hops: [],
-           ebc: [],
-           ibu: [],
+           ebc: [0,60],
+           ibu: [0,140],
            searchString: ""
          },
          rangeLimits: {
@@ -68,8 +67,9 @@ class BeerList extends Component {
      if ((!this.state.beerPage && id===0) || this.state.isLoading) return
      this.setState(prevState => {
        return {
-       cardIsVisited: !prevState.cardIsVisited,
-       beerPage: id
+         ...prevState,
+         cardIsVisited: !prevState.cardIsVisited,
+         beerPage: id
        }
      })
    }
@@ -120,13 +120,16 @@ class BeerList extends Component {
        this.setState({isLoading: true}, () => {
          const beers = this.state.beers
          const nextPage = getNextMultiple(this.state.defaultNumberOfBeers, this.state.beers.length) / this.state.defaultNumberOfBeers
-         const urlParams = getFetchUrlParams(this.state.filtersValues, this.state.rangeLimits, nextPage)
+         const urlArray = getFetchUrlParams(this.state.filtersValues, this.state.rangeLimits, nextPage)
          
          const fetchBeers = (urlParams) => {
            fetch(urlParams)
            .then(response => response.json())
            .then(data => {
-               if (!data.length) return
+               if (!data.length) {
+                 this.setState({isLoading: false})
+                 return
+               } 
                for (let item of data) {
                  if (beers.some(el => el.id === item.id)) continue
                  beers.push(item)
@@ -144,14 +147,15 @@ class BeerList extends Component {
                isLoading: false,
              })
            })
-         } 
-         
-         if (urlParams.includes("?per_page=" + this.state.defaultNumberOfBeers)) {
-           fetchBeers(urlParams)
+         }
+         if (urlArray.length < 60) {
+           for (const url of urlArray) {
+             fetchBeers(url)
+           }
          }
          else {
-           for (let i=1; i < 10 ; i++) {
-             fetchBeers(urlParams + "&per_page=80&page=" + i)
+           for (let i=0; i < 60; i++) {
+             fetchBeers(urlArray[i])
            }
          }
         })
@@ -172,7 +176,6 @@ class BeerList extends Component {
                                              filtersValues={this.state.filtersValues}
                                              rangeLimits={this.state.rangeLimits}
                                              handleSubmit={this.handleSubmit}
-                                             handleSliders={this.handleSliders}
                                              handleFiltersValues={this.handleFiltersValues}
                                              clearSearchFilter={this.clearSearchFilter}
                                             />
