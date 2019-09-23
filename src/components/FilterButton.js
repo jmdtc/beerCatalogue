@@ -3,7 +3,7 @@ import React, {Component} from "react"
 class FilterButton extends Component {
   getButtonText(props) {
     if (props.name === "Food Pairing") {
-      const text = props.value.length ? `Pairing · ${props.value}` : props.name
+      const text = props.name
       return text
     }
     else if (props.name === "Hops") {

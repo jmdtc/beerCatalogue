@@ -6,7 +6,8 @@
     "create-react-app": "^1.5.2",
     "rc-slider": "^8.6.11",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "moment": "^2.24.0"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"

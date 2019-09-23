@@ -3,6 +3,7 @@ import FilterButton from "./FilterButton"
 import SearchFilter from "./SearchFilter"
 import ExpandedFilters from "./ExpandedFilters"
 import hopsData from "../datas/hopsData"
+import moment from 'moment'
 
 
 class Filters extends Component {
@@ -13,7 +14,7 @@ class Filters extends Component {
          {
            name: "Food Pairing",
            filterKey: "foodPairing",
-           value: "",
+           value: [],
            expanded: false
          },
          {
@@ -23,9 +24,9 @@ class Filters extends Component {
            expanded: false
          },
          {
-           name: "EBC / SRM - Color",
+           name: "EBC / SRM - Colour",
            filterKey: "ebc",
-           value: [this.props.rangeLimits.ebcRange[0],this.props.rangeLimits.ebcRange[1]],
+           value: [],
            min: this.props.rangeLimits.ebcRange[0],
            max: this.props.rangeLimits.ebcRange[1],
            marks: {0:"Lager", 16:"Wheat/Ales", 26:"Amber", 45:"Dark"},
@@ -34,7 +35,7 @@ class Filters extends Component {
          {
            name: "Bitterness",
            filterKey: "ibu",
-           value: [this.props.rangeLimits.ibuRange[0], this.props.rangeLimits.ibuRange[1]],
+           value: [],
            min: this.props.rangeLimits.ibuRange[0],
            max: this.props.rangeLimits.ibuRange[1],
            marks: {10:"Wheat", 25:"Pils", 40:"Ales", 120:"IPA++"},
@@ -46,12 +47,35 @@ class Filters extends Component {
      this.handleOverlayClick = this.handleOverlayClick.bind(this)
      this.clearValue = this.clearValue.bind(this)
      this.handleSliderValue = this.handleSliderValue.bind(this)
+     this.handleFoodSubmit = this.handleFoodSubmit.bind(this)
+     this.clearFoodPill = this.clearFoodPill.bind(this)
      this.handlePillClick = this.handlePillClick.bind(this)
-     this.clearSelectedPill = this.clearSelectedPill.bind(this)
      this.handleApplyButton = this.handleApplyButton.bind(this)
      this.setState = this.setState.bind(this)
    }
+  
+   static getDerivedStateFromProps(props, state) {
+     const filterHasChanged = (arr1, arr2) => {
+       return !(arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]))
+     }
 
+     if ((filterHasChanged(state.filterButtons[0].value, props.filtersValues.foodPairing) ||
+          filterHasChanged(state.filterButtons[1].value, props.filtersValues.hops) ||
+          filterHasChanged(state.filterButtons[2].value, props.filtersValues.ebc) ||
+          filterHasChanged(state.filterButtons[3].value, props.filtersValues.ibu)) &&
+         state.filterButtons.every(el => !el.expanded)) {
+       let filterButtons = state.filterButtons
+       for (let filter of state.filterButtons) {
+         if (filterHasChanged(filter.value, props.filtersValues[filter.filterKey])) {
+           const index = filterButtons.findIndex(el => el.filterKey === filter.filterKey)
+           filterButtons[index].value = props.filtersValues[filter.filterKey]
+         }
+       }
+       return filterButtons
+     }
+     return null;
+  }
+  
    handleFiltersClick(buttonName) {
      this.setState(prevState => {
        const filterButtons = prevState.filterButtons
@@ -72,11 +96,11 @@ class Filters extends Component {
          main.classList.add('overlay-on')
          return
        }
-       main.classList.remove('overlay-on')
+       this.hideOverlay(this.setState, event)
      })
    }
 
-    hideOverlay(setState) {
+    hideOverlay(setState, event) {
       const outsideClickListener = event => {
               setState(prevState => {
                  const [...filterButtonsState] = prevState.filterButtons
@@ -96,11 +120,11 @@ class Filters extends Component {
          outsideClickListener(event)
     }
 
-    handleOverlayClick() {
+    handleOverlayClick(event) {
       const element = document.querySelector(".expanded-button")
       const isVisible = elem => !!elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length )
       if (!element.contains(event.target) && isVisible(element)) {
-        this.hideOverlay(this.setState)
+        this.hideOverlay(this.setState, event)
       }
     }
 
@@ -116,27 +140,51 @@ class Filters extends Component {
   
    handlePillClick(id) {
     const clickedPill = hopsData.find(hop => hop.id === id)
-    if (this.state.filterButtons[1].value.some(hop => hop === clickedPill)) return
 
     this.setState(prevState => {
-      const updatedHopsButton = prevState.filterButtons[1]
-      updatedHopsButton.value.push(clickedPill)
+      let updatedHopsButton = prevState.filterButtons[1]
+      if (this.state.filterButtons[1].value.some(hop => hop.id === clickedPill.id)) {
+        updatedHopsButton.value = updatedHopsButton.value.filter(el => el.id !== clickedPill.id)
+      }
+      else {
+        updatedHopsButton.value.push(clickedPill)
+      }
       let filterButtons = prevState.filterButtons
       filterButtons[1] = updatedHopsButton
       return {filterButtons: filterButtons}
     })
   }
-
-  clearSelectedPill(id) {
+  
+  handleFoodSubmit(e) {
+    e.preventDefault()
+    e.persist()
+    if (e.target.input.value.length < 3) return
     this.setState(prevState => {
-      const clickedPill = prevState.filterButtons[1].value.find(hop => hop.id === id)
-      const updatedHops = prevState.filterButtons[1].value.filter(el => el !== clickedPill)
-      let filterButtons = prevState.filterButtons
-      filterButtons[1].value = updatedHops
+      const text = e.target.input.value
+      let {filterButtons} = prevState
+      let {value} = filterButtons[0]
+      const key = text + moment()
+      const foodPairingQuery = {
+        text: text,
+        key: key,
+        id: key
+      }
+      value.push(foodPairingQuery)
+      filterButtons[0].value = value
       return {filterButtons: filterButtons}
     })
   }
-
+  
+  clearFoodPill(id) {
+    this.setState(prevState => {
+      let {filterButtons} = prevState
+      let {value} = filterButtons[0]
+      const updatedArray = value.filter(el => el.id !== id)
+      filterButtons[0].value = updatedArray
+      return {filterButtons: filterButtons}
+    })
+  }
+  
    clearValue(filter) {
      this.setState(prevState => {
        const keysMin = Object.keys(filter).some(key => key === "min")
@@ -158,8 +206,8 @@ class Filters extends Component {
      })
    }
 
-   handleApplyButton() {
-     this.hideOverlay(this.setState)
+   handleApplyButton(event) {
+     this.hideOverlay(this.setState, event)
    }
 
    render()  {
@@ -197,8 +245,9 @@ class Filters extends Component {
                           handleSliderValue={this.handleSliderValue}
                           clearValue={this.clearValue}
                           handleApplyButton={this.handleApplyButton}
+                          handleFoodSubmit={this.handleFoodSubmit}
+                          clearFoodPill={this.clearFoodPill}
                           handlePillClick={this.handlePillClick}
-                          clearSelectedPill = {this.clearSelectedPill}
                         />
                       </div>
 
