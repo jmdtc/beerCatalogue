@@ -55,17 +55,17 @@ class Filters extends Component {
    }
   
    static getDerivedStateFromProps(props, state) {
+     if (state.filterButtons.some(el => el.expanded)) return null
+     
      const filterHasChanged = (arr1, arr2) => {
        return !(arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]))
      }
-
-     if ((filterHasChanged(state.filterButtons[0].value, props.filtersValues.foodPairing) ||
-          filterHasChanged(state.filterButtons[1].value, props.filtersValues.hops) ||
-          filterHasChanged(state.filterButtons[2].value, props.filtersValues.ebc) ||
-          filterHasChanged(state.filterButtons[3].value, props.filtersValues.ibu)) &&
-         state.filterButtons.every(el => !el.expanded)) {
+     
+     const stateFilters = [...state.filterButtons]
+     const propsFilters = {...props.filtersValues}
+     if (stateFilters.some(el => filterHasChanged(el.value, propsFilters[el.filterKey]))) {
        let filterButtons = state.filterButtons
-       for (let filter of state.filterButtons) {
+       for (let filter of stateFilters) {
          if (filterHasChanged(filter.value, props.filtersValues[filter.filterKey])) {
            const index = filterButtons.findIndex(el => el.filterKey === filter.filterKey)
            filterButtons[index].value = props.filtersValues[filter.filterKey]
