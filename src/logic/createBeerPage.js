@@ -8,6 +8,12 @@ export default function createBeerPage(beers, id, handleClick) {
                      name={beer.name}
                      tagline={beer.tagline}
                      description={beer.description}
+                     brewersTips={beer.brewers_tips}
+                     image={beer.image_url}
+                     foodPairing={beer.food_pairing}
+                     ibu={beer.ibu}
+                     ebc={beer.ebc}
+                     ingredients={beer.ingredients}
                      handleClick={handleClick}
                    />
   return beerPage
