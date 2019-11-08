@@ -20,6 +20,7 @@ class PillsFilter extends Component {
     const styles = {
       pillsBox: {
         maxHeight: "350px",
+        width: "auto",
         overflowY: "auto",
       },
       pillHolderBasic: {

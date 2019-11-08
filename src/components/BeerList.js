@@ -65,6 +65,7 @@ class BeerList extends Component {
   
    handleClick(id) {
      if ((!this.state.beerPage && id===0) || this.state.isLoading) return
+     window.scrollTo(0,0)
      this.setState(prevState => {
        return {
          ...prevState,
@@ -167,7 +168,6 @@ class BeerList extends Component {
        let beerCards = createBeerCards(this.state.beers, this.handleClick, this.state.filtersValues)
        let beerPage = createBeerPage(this.state.beers, this.state.beerPage, this.handleClick)
        const loadingText = this.state.isLoading ? "Loading..." : null
-
        
        return (
            <div>

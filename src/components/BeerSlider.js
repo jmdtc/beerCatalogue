@@ -20,7 +20,8 @@ class BeerSlider extends Component {
   }
   
   render() {
-    const wrapperStyle = { width: "400px", margin: "30px" }
+    const wrapperStyle = { width: "80%",
+                          margin: "30px" }
     const styles = {
       paragraph: {
         maxWidth: "400px",
@@ -46,7 +47,7 @@ class BeerSlider extends Component {
     
     const railStyle = this.props.filterProps.filterKey === "ebc" ?
           {
-            background: "linear-gradient(90deg, rgba(248,247,83,0.4) 0%,   rgba(213,188,38,0.4) 27%, rgba(188,103,51,0.4) 43%, rgba(38,23,22,0.4) 75%, rgba(3,4,3,0.4) 100%)"
+            background: "linear-gradient(90deg, rgba(248,247,83,0.4) 0%,rgba(213,188,38,0.4) 27%,rgba(188,103,51,0.4) 43%,rgba(38,23,22,0.4) 75%,rgba(3,4,3,0.4) 100%)"
           } : {}
 
       
