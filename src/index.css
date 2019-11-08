@@ -2,13 +2,17 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Open Sans', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   background-color: rgba(163, 205, 236, 0.3);
   padding-top: 67px;
 }
 
 .loading {
   text-align: center;
+}
+
+strong {
+  font-weight: 600
 }
 
 button:focus {
@@ -47,6 +51,26 @@ button:focus {
   color: #2196F3;
 }
 
+.navbar:hover .navbar-logo {
+  animation-name: rotate;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes rotate {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(360deg);}
+}
+
+.hovering-div {
+  position: fixed; 
+  display: block;
+  z-index: 50;
+  height: 50px;
+  width: 200px;
+}
+
 /* Filters */
 
 #overlay {
@@ -63,11 +87,28 @@ button:focus {
 }
 
 .expanded-button {
+  position: absolute;
+  top: 140px;
   background-color: #fff;
   padding: 24px;
   border-radius: 4px;
   border: 1px solid rgba(0,0,0,0.2);
   box-shadow: rgba(0, 0, 0, 0.15) 0px 14px 36px 2px
+}
+
+@media (max-width: 576px) {
+  .expanded-button {
+    position: absolute;
+    top: 130px;
+    height: 100%;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+  .expanded-button-button-holder {
+    margin: auto;
+    width: 100%;
+  }
 }
 
 .expanded-button label {
@@ -93,14 +134,15 @@ button:focus {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 992px) {
   .expanded-button {
-  position: absolute;
-  top: 140px;
+  left: 50%;
+  transform: translateX(-50%)
   }
 }
 
-@media (min-width: 768px) and (max-width: 1200px){
+
+@media (min-width: 992px) {
   .expanded-food {
     left: 15px;
   }
@@ -115,8 +157,10 @@ button:focus {
   }
 }
 
-.expanded-food {
-  width: 350px;
+@media (min-width: 768px) {
+  .expanded-food {
+    width: 350px;
+  }
 }
 
 .filters-container {
@@ -134,17 +178,29 @@ button:focus {
 }
 
 .filters-buttons-container {
+  display: flex;
   padding-left: 0px;
   padding-right: 0px;
-  display: flex;
 }
 
+@media (max-width: 1200px) {
+  .filters-buttons-container {
+    white-space: nowrap;
+    overflow-x: auto; 
+    overflow-scrolling: touch;
+  }
+  .filters-buttons-container::-webkit-scrollbar {
+    display: none;
+  }
+  form.search-form input[type=text] {
+    width: 200px !important;
+  }
+}
 
 .filter-button-holder {
   margin-right: 16px;
   display: inline-block;
 }
-
 
 @media (min-width: 1200px) {
     .filters-buttons-container {
@@ -159,6 +215,7 @@ button:focus {
   border-radius: 4px;
   padding: 6px 12px 6px 12px;
   cursor: pointer;
+  height: 36px;
 }
 
 .filter-active {
@@ -181,7 +238,7 @@ form.search-form input[type=text]:focus {
 form.search-form input[type=text] {
   float: left;
   padding: 6px;
-  height: 38px;
+  height: 36px;
   border: solid 1px #BCC1CF;
   border-radius: 0px 4px 4px 0px;
   width: 250px;
@@ -192,7 +249,7 @@ form.search-form input[type=text] {
 
 form.search-form button {
   float: left;
-  height: 38px;
+  height: 36px;
   padding: 10px;
   background: #2196F3;
   color: white;
@@ -231,6 +288,24 @@ form.search-form button:hover {
 
 .more-hops:hover {
   color: #2196F3;
+}
+
+@media (max-width: 576px) {
+  .pills-box {
+    max-height: none !important;
+  }
+  .expanded-hops {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    height: 80% !important;
+  }
+  .pill-holder {
+    width: 100% !important;
+  }
+  .expanded-button-button-holder {
+    
+  }
 }
 
 .pills-box::-webkit-scrollbar-track
@@ -278,7 +353,6 @@ form.search-form button:hover {
 /* Beer Cards */
 
 .beer-card-container {
-  height: 400px;
   margin-bottom: 30px;
 }
 
@@ -294,8 +368,7 @@ form.search-form button:hover {
 .beer-card {
   background-color: #fff;
   border-radius: 15px;
-  max-height: 410px;
-  height: 410px;
+  height: 430px;
   overflow: hidden;
   box-shadow: 0 1px 20px rgba(0,0,0,0.05), 0 1px 30px rgba(0,0,0,0.07);
   transition: 0.5s;

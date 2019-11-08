@@ -42,7 +42,7 @@ class SearchFilter extends Component {
        
        let glassStyle = {
          position: "relative",
-         top: "-3px",
+         top: "-5px",
        }
        
        const clearCrossStyle = {
@@ -88,7 +88,7 @@ class SearchFilter extends Component {
                  value={value}
                  style={inputStyle}
                  onChange={(e) => this.handleChange(e)}
-                 onFocus={() => {this.setState({focus:true})}}
+                 onFocus={() => {this.setState({focus:true, value: this.props.filterValue})}}
                  onBlur={this.handleBlur}
                  />
                <span style={spanInputStyle}>{(this.state.value || this.props.filterValue) && clearCross}</span>
